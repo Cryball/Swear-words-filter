@@ -1,5 +1,11 @@
 import re
 from tqdm import tqdm
+import difflib
+from fuzzywuzzy import fuzz
+import logging
+import app_logger
+
+logger = app_logger.get_logger(__name__)
 
 
 def open_file():  # Функция для открытия файла с матерными выражениями
@@ -15,13 +21,13 @@ def find_word(text, index):  # Поиск слова
     right_indexes = index
 
     # Если index находится в середине слова, получаем левую часть слова
-    while (left_indexes >= 0 and text[left_indexes].isalpha()):
+    while (left_indexes >= 0 and text[left_indexes].isspace() == False):
         list_of_letters.append(text[left_indexes])
         left_indexes -= 1
     list_of_letters_updated = list(reversed(list_of_letters))
 
     # Получаем правую часть слова
-    while (right_indexes <= (len(text) - 1) and text[right_indexes].isalpha()):
+    while (right_indexes <= (len(text) - 1) and text[right_indexes].isspace() == False):
         list_of_letters_updated.append(text[right_indexes])
         right_indexes += 1
     word = ''.join(list_of_letters_updated)
@@ -43,7 +49,26 @@ def left_len_of_word(text, index):  # Поиск длины части слов�
 def get_swear_words(text):  # Получение всех матерных слов в тексте
     swear_words_in_text = []
     swear_list_google = open_file()
+    test = {n.lower(): n for n in swear_list_google}
+    step = 0
+    logger.info("Поиск запрещенных слов с замененными буквами")
+    for i in tqdm(range(0, 10)):
+        i = str(i)
+        result = text.find(i, step)
 
+        while result != -1:
+            result = text.find(i, step)
+            if result == -1:
+                break
+            step += 1
+            x = find_word(text, result)
+            w = difflib.get_close_matches(x.lower(), test, 1, 0.6)
+            if len(w) != 0:
+                if fuzz.token_sort_ratio(x.lower(), w[0]) >= 60:
+                    swear_words_in_text.append(x)
+            result = text.find(i, result + step)
+
+    logger.info("Поиск остальных запрещенных слов")
     for swear_word in tqdm(swear_list_google):
         result = re.findall(swear_word, text, re.IGNORECASE)  # Находим слова
         if len(result) != 0:
