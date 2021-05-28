@@ -1,6 +1,5 @@
 from flask import Flask, request
 from function_filter import filter
-import logging
 
 
 # Далее код для WebApi
