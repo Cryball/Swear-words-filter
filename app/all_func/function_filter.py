@@ -4,7 +4,7 @@ import gensim
 from string import punctuation
 import re
 import time
-from serviceFunctions import find_word, left_len_of_word, get_swear_words, replace_word
+from serviceFunctions import find_word, get_swear_words, replace_word
 import app_logger
 
 w2v_test = gensim.models.Word2Vec.load("app/word2vecmodel/word2vec.model")
@@ -37,7 +37,7 @@ def filter(text):
                     break
 
                 # Находим слово, в котором включено матерное слово
-                found_word = find_word(text, index_of_entry)
+                found_word, left_len = find_word(text, index_of_entry)
 
                 # Проверка на пунктуацию первого и последнего символов
                 if (found_word[0] in punctuation):
@@ -46,7 +46,6 @@ def filter(text):
                 if (found_word[-1] in punctuation):
                     found_word = found_word[:-1]
 
-                left_len = left_len_of_word(text, index_of_entry)
                 if type_of_list == 0:  # autoban
                     text = replace_word(
                         text, index_of_entry, left_len, found_word)

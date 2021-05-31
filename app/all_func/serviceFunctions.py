@@ -24,25 +24,14 @@ def find_word(text, index):  # Поиск слова
         list_of_letters.append(text[left_indexes])
         left_indexes -= 1
     list_of_letters_updated = list(reversed(list_of_letters))
+    left_len = len(list_of_letters_updated)
 
     # Получаем правую часть слова
     while (right_indexes <= (len(text) - 1) and text[right_indexes].isspace() == False):
         list_of_letters_updated.append(text[right_indexes])
         right_indexes += 1
     word = ''.join(list_of_letters_updated)
-    return word
-
-
-def left_len_of_word(text, index):  # Поиск длины части слова от индекса слева
-    list_of_letters = []
-    left_indexes = index - 1
-    # Если index находится в середине слова, получаем левую часть слова
-    while (left_indexes >= 0 and text[left_indexes].isspace() == False):
-        list_of_letters.append(text[left_indexes])
-        left_indexes -= 1
-    list_of_letters_updated = list(reversed(list_of_letters))
-    left_len = len(list_of_letters_updated)
-    return left_len
+    return word, left_len
 
 
 def get_swear_words(text):  # Получение всех матерных слов в тексте
