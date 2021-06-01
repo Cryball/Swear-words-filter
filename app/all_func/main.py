@@ -1,5 +1,5 @@
 from flask import Flask, request
-from function_filter import filter
+import function_filter
 
 
 # Далее код для WebApi
@@ -20,7 +20,7 @@ def form_example():
 @app.route('/', methods=['POST'])
 def form_example1():
     text = request.form.get('text')
-    result = filter(text)
+    result = function_filter.filter.filter(text)
     return result
 
 
