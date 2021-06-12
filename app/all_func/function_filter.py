@@ -16,9 +16,9 @@ class filter:
     def filter(text):
         logger.info("Программа стартует")
         start = time.time()
-        # Получаем лист листов всех матерных слов в тексте
         list_swear_words_in_text = serviceFunctions.serviceFunctions.get_swear_words(
             text)
+        print(list_swear_words_in_text)
         logger.info("Происходит замена слов")
 
         for type_of_list in range(len(list_swear_words_in_text)):
@@ -67,7 +67,3 @@ class filter:
         logger.info("Время работы программы:")
         print((end - start))
         return text
-
-
-text = "fuck fuck hello world lol"
-print(filter.filter(text))

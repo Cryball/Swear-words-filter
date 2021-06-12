@@ -3,8 +3,12 @@ from tqdm import tqdm
 import difflib
 from fuzzywuzzy import fuzz
 import app_logger
+import gensim
 
 logger = app_logger.get_logger(__name__)
+
+w2v_test = gensim.models.Word2Vec.load("app/word2vecmodel/word2vec.model")
+words_test_w2v = list(w2v_test.wv.key_to_index)
 
 
 class serviceFunctions:
@@ -43,7 +47,8 @@ class serviceFunctions:
         swear_list_google = serviceFunctions.open_file()
         test = {n.lower(): n for n in swear_list_google}
 
-        regular_exp = ["\S+[-.?!)(,:*_]\S+", "\S+[0-9]\S+"]
+        regular_exp = [
+            "[a-zA-Z]+[-.?!)(,:*_]+[a-zA-Z]+", "[a-zA-Z]+[0-9]+[a-zA-Z]+"]
 
         logger.info("Поиск запрещенных слов")
 
@@ -53,9 +58,9 @@ class serviceFunctions:
                 for i in range(len(result2)):
                     check_word = result2[i]
                     w = difflib.get_close_matches(
-                        check_word.lower(), test, 1, 0.55)
+                        check_word.lower(), test, 1, 0.75)
                     if len(w) != 0:
-                        if fuzz.partial_ratio(check_word.lower(), w[0]) >= 50:
+                        if fuzz.WRatio(check_word.lower(), w[0]) >= 75:
                             swear_words_autoban.append(check_word)
 
         for swear_word in tqdm(swear_list_google):
@@ -67,6 +72,7 @@ class serviceFunctions:
                         result[swear_word])  # Добавляем в лист
 
         # Получаем лист с уникальными словами
+        swear_words_autoban = list(set(swear_words_autoban))
         swear_words_in_text = list(set(swear_words_in_text))
         return swear_words_autoban, swear_words_in_text
 
