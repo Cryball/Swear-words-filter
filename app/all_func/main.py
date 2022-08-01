@@ -11,7 +11,7 @@ def form_example():
     return '''
            <form method="POST">
                <div>
-                    <label>Введите текст для фильтрации: <input type="text" name="text"></label>
+                    <label>Insert text to filter: <input type="text" style="width: 500px; height: 50px;" name="text"></label>
                </div>
                <input type="submit" value="Submit">
            </form>'''
@@ -21,7 +21,17 @@ def form_example():
 def form_example1():
     text = request.form.get('text')
     result = function_filter.filter.filter(text)
-    return result
+    return '''
+    <div>
+        <h1>Text before:</h1>
+        <p>''' + text + '''</p>
+        <br /><br /><br /><br />
+        <h2>Work of code:</h2>
+        <p>''' + str(round(result[1], 2)) + ''' s</p>
+        <h1>Text after filtration:</h1>
+        <p>''' + result[0] + '''</p>
+    </div>
+    '''
 
 
 if __name__ == '__main__':

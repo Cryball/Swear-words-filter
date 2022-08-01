@@ -66,4 +66,4 @@ class filter:
         end = time.time()
         logger.info("Время работы программы:")
         print((end - start))
-        return text
+        return [text, (end - start)]
