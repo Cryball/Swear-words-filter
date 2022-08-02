@@ -20,6 +20,9 @@ Not obvious words go next.
 ___
 
 ## :tv: **Demo**:
+
+https://user-images.githubusercontent.com/60907770/182312645-604cdd64-fe60-418a-8860-25905491542e.mp4
+
 ___
 
 ## :scroll: **Project stack**:
